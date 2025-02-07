@@ -31,7 +31,7 @@ charge_rate = 30  # kWh per charge action
 discharge_rate = 35  # kWh per discharge action
 charge_efficiency = 0.9  # 90% efficiency in charging
 discharge_efficiency = 0.9  # 90% efficiency in discharging
-charging_locked = False  # Blokada ładowania magazynu
+charging_locked = False  # charge lock
 dischTresh=-35 # Balande level for discharging
 chrgTresh=10 # Balance level for charging
 
@@ -224,7 +224,7 @@ ecdf_y1 = np.arange(1, len(sorted_balance1) + 1) / len(sorted_balance1)
 ecdf_y2 = np.arange(1, len(sorted_balance2) + 1) / len(sorted_balance2)
 ecdf_y3 = np.arange(1, len(sorted_balance3) + 1) / len(sorted_balance3)
 ecdf_y4 = np.arange(1, len(sorted_balance4) + 1) / len(sorted_balance4)
-# Create the ECDF plot f
+# Create the ECDF plot 
 plt.figure(figsize=(8, 6))
 plt.step(sorted_balance1, ecdf_y1, where='post', color='red', label='ECDF of Grid Balance without BESS&FLEX')
 plt.step(sorted_balance2, ecdf_y2, where='post', color='orange', label='ECDF of Grid Balance with FLEX')
