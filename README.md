@@ -53,21 +53,19 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 | Parameter           | Description                                       | Default Value |
 |---------------------|---------------------------------------------------|--------------|
 | `battery_capacity`  | Maximum battery storage capacity (kWh)           | `180`        |
-| `battery_charge`    | Initial battery charge level (kWh)               | `0`          |
 | `charge_rate`       | Charging power (kW per time step)                | `30`         |
 | `discharge_rate`    | Discharging power (kW per time step)             | `35`         |
 | `charge_efficiency` | Efficiency of charging (0-1 scale)               | `0.9`        |
 | `discharge_efficiency` | Efficiency of discharging (0-1 scale)         | `0.9`        |
-| `charging_locked`   | Prevents charging when enabled                   | `False`      |
 | `chrgTresh`        | Grid balance threshold for charging (kW)          | `10`         |
 | `dischTresh`       | Grid balance threshold for discharging (kW)       | `-35`        |
+| `battery_charge`    | Initial battery charge level (kWh)               | `0`          |
+| `charging_locked`   | Prevents charging when enabled                   | `False`      |
 
 ### **Grid and Renewable Generation Parameters**  
 | Parameter             | Description                                    | Default Value |
 |-----------------------|------------------------------------------------|--------------|
-| `grid_demand`        | Initial grid demand (kW)                       | `50`         |
 | `base_demand`       | Base grid demand level (kW)                     | `50`         |
-| `renewable_generation` | Initial renewable generation (kW)            | `130`        |
 | `max_generation`    | Maximum possible renewable generation (kW)      | `130`        |
 | `sun_hours`         | Hours of sunlight per day (affects solar gen.)  | `14`         |
 | `time_shift`        | Time offset for demand function                 | `7`          |
@@ -75,7 +73,6 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 ### **Flexibility Service Parameters**  
 | Parameter               | Description                                  | Default Value |
 |-------------------------|----------------------------------------------|--------------|
-| `demand_modification`  | Initial demand modification factor (1 = no change) | `1.0`  |
 | `flexChng`            | Demand flexibility change factor              | `0.33`       |
 | `flexTime`            | Duration of flexibility service (time steps)  | `12`         |
 
@@ -84,7 +81,16 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 |---------------|-----------------------------------------------------|--------------|
 | `time_interv` | Time step in hours                                 | `0.5`        |
 | `FPS`         | Frames per second (higher = smoother animation)     | `8`          |
-| `max_points`  | Maximum number of time steps shown in graphs       | `7 * 48`     |
+| `max_points`  | Maximum number of time steps shown in graphs       | `7 * 24/time_interv`|
+
+### **Time or state-based process config.**  
+
+| Function     | Description                                         |
+|---------------|-----------------------------------------------------|
+| renewable_generation_function(t)     | Renewable generation time-function |
+| demand_function(t)     | Demand time-function |
+| BESS_control()     | BESS Control sim. state-based function |
+| update_flexibility_service()     | Flexability service behavior |
 
 ## **How It Works**  
 🔴 **Toggle BESS** – Enables/disables battery energy storage (BESS)  
