@@ -266,3 +266,5 @@ if time_clock>24:
         plt.title('Energy Cost Forecast')
         plt.show()
     print("Need >1 day without BESS&FLEX to create cost profile based on grid balance")
+
+# EOF
