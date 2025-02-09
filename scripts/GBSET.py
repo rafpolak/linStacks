@@ -16,24 +16,9 @@ import math
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-# Simulation window config.
-WIDTH, HEIGHT = 800, 600
-WHITE, BLACK, RED, GREEN, YELLOW, BLUE, ORANGE, GRAY = (255, 255, 255), (20, 20, 20), (200, 0, 0), (0, 200, 0), (200, 200, 0), (0, 100, 255), (255, 165, 0), (40, 50, 40)
-graph_width = WIDTH - 100 # Plot size
-graph_height = 250 # Plot size
-start_x = 50 # Plot coord.
-start_y = HEIGHT - graph_height - 50
-FPS = 8  # FPS, more for smoother animation
-max_points = 7*48 # Max plot X-axis limit
-
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Grid Balance Simulation-based Experiment Tool")
-font = pygame.font.Font(None, 30)
-
-# Sim. config.
+# Simulation experiment config.
 time_interv = 0.5 # time step
-time_clock = 0  # Time step for simulation
+time_clock = 0  # Time clock start
 
 # Battery variables
 battery_capacity = 180
@@ -60,15 +45,6 @@ max_generation = 130  # Max renewable generation (kW)
 sun_hours = 14 # Sun hours per day
 grid_balance = renewable_generation - grid_demand  # Initial Net energy available
 time_shift=7 # Offset for demand function
-
-# TS data
-time_data = []
-generation_data = []
-battery_data = []
-demand_data = []
-balance_data = []
-mag=[]
-flex=[]
 
 def renewable_generation_function(t):
     sun_position = math.sin((math.pi / sun_hours) * t)  # Sinusoidal variation (0 to 1)
@@ -98,6 +74,22 @@ def update_flexibility_service():
     else: new_demand_modification=demand_modification
     return new_modification_timer,new_demand_modification
 
+# Exp. data sets
+time_data, generation_data, battery_data, demand_data, balance_data, mag, flex = [], [], [], [], [], [], []
+
+# pygame init
+WIDTH, HEIGHT = 800, 600
+WHITE, BLACK, RED, GREEN, YELLOW, BLUE, ORANGE, GRAY = (255, 255, 255), (20, 20, 20), (200, 0, 0), (0, 200, 0), (200, 200, 0), (0, 100, 255), (255, 165, 0), (40, 50, 40)
+graph_width = WIDTH - 100 # Plot size
+graph_height = 250 # Plot size
+start_x = 50 # Plot coord.
+start_y = HEIGHT - graph_height - 50
+FPS = 8  # FPS, more for smoother animation
+max_points = 7*24/time_interv # Max plot X-axis limit
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Grid Balance Simulation-based Experiment Tool")
+font = pygame.font.Font(None, 30)
 running = True
 button_bess = pygame.Rect(350, 200, 160, 40)  # Toggle BESS
 button_flex = pygame.Rect(535, 200, 220, 40)  # Flexibility Service
