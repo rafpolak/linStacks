@@ -23,11 +23,12 @@ fig. 4 GBSET Cost Forecast
 
 
 ## **Features**  
-✅ **Grid balance simulation** – dynamic analysis of energy generation and consumption  
-✅ **Battery Energy Storage System (BESS) management** – charge/discharge algorithm  
-✅ **Flexibility services** – modify energy demand during specific time periods  
-✅ **Real-time visualization** – dynamic graphs displaying power flows and grid balance  
-✅ **Simulation summary** – Grid balance ECDF, profile and energy cost analysis  
+✅ **Grid balance simulation** – Dynamic analysis of grid energy generation and consumption  
+✅ **Battery Energy Storage System (BESS) management** – Charge/discharge control algorithm  
+✅ **Flexibility services** – Adaptive energy demand modification during specific periods  
+✅ **Real-time visualization and operation** – Controls & dynamic graphs displaying power flows and grid balance  
+✅ **Automated simulation summary** – Grid balance ECDF, profile, and energy cost analysis  
+✅ **Ready for further development** – e.g. configuration, BESS control and consumer behavior optimization, adaptable for complex functions  
 
 ## **Requirements**  
 - Python 3.x  
