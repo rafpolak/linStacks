@@ -3,7 +3,7 @@
 ![GBSET Main window](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf)  
 fig. 1 GBSET Main window
 
-## **Project Overview**  
+## **Overview**  
 GBSET is a simple, easy-to-use simulation tool (fig. 1) for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
 
 In a simple yet powerful way, you can modify the behavior of flexibility services or other components. The tool can be expanded with dedicated time-based features, such as load profiles, advanced behavioral logic, or AI-driven decision-making. Potential enhancements include GAN-based learning, reinforcement learning agents, and other adaptive control strategies for more advanced energy management.
