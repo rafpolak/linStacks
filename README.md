@@ -1,9 +1,27 @@
 # **GBSET - Grid Balance Simulation-based Experiment Tool**  
 
-![GBSET Screenshot](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf)  
+![GBSET Screenshot Main window](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf) 
+
+Fig. 1 GBSET Screenshot Main window
 
 ## **Project Overview**  
 GBSET is a simulation tool for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
+
+
+![GBSET Screenshot ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)
+
+Fig. 2 GBSET Screenshot ECDF plots
+
+
+![GBSET Screenshot Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)
+
+fig. 3 GBSET Screenshot Time Average
+
+
+![GBSET Screenshot Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)
+
+fig. 4 GBSET Screenshot Cost Forecast
+
 
 ## **Features**  
 ✅ **Grid balance simulation** – dynamic analysis of energy generation and consumption  
