@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Script Name: <GBSET>
+Description: <GBSET - Grid Balance Simulation-based Experiment Tool>
+Author: <rafpolak>
+Date: <2025.02.07>
+GitHub Repository: <https://github.com/rafpolak/linStack>
+"""
+
 import pygame
 import random
 import numpy as np
