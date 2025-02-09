@@ -1,8 +1,7 @@
 # **GBSET - Grid Balance Simulation-based Experiment Tool**  
 
-![GBSET Screenshot Main window](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf) 
-
-fig. 1 GBSET Screenshot Main window
+![GBSET Main window](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf)  
+fig. 1 GBSET Main window
 
 ## **Project Overview**  
 GBSET is a simple, easy-to-use simulation tool (fig. 1) for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
@@ -11,16 +10,16 @@ In a simple yet powerful way, you can modify the behavior of flexibility service
 
 At the end of the simulation, the program generates key statistics and presents them through detailed visualizations and charts. The database of data recorded during the experiment is partitioned according to the specific conditions of the test, based on the activation status of various options (fig 2-4).
 
-![GBSET Screenshot ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)  
-fig. 2 GBSET Screenshot ECDF plots
+![GBSET ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)  
+fig. 2 GBSET ECDF plots
 
 
-![GBSET Screenshot Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)  
-fig. 3 GBSET Screenshot Time Average
+![GBSET Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)  
+fig. 3 GBSET Time Average
 
 
-![GBSET Screenshot Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)  
-fig. 4 GBSET Screenshot Cost Forecast
+![GBSET Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)  
+fig. 4 GBSET Cost Forecast
 
 
 ## **Features**  
