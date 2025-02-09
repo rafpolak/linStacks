@@ -64,7 +64,7 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 
 ### **Grid and Renewable Generation Parameters**  
 | Parameter             | Description                                     | Default Value |
-|-----------------------|-----------------------------------------  ------|---------------|
+|-----------------------|-------------------------------------------------|---------------|
 | `base_demand`         | Base grid demand level (kW)                     | `50`          |
 | `max_generation`      | Maximum possible renewable generation (kW)      | `130`         |
 | `sun_hours`           | Hours of sunlight per day (affects solar gen.)  | `14`          |
