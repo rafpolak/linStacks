@@ -92,8 +92,13 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 | update_flexibility_service()     | Flexability service (simple or more complex behavior) |
 
 ## **How It Works**  
-🔴 **Toggle BESS** – Enables/disables battery energy storage (BESS)  
-🟠 **Flexibility Service** – Activates demand-side flexibility  
+1 - Configure your system  
+2 - Operate:  
+  🔴 **Toggle BESS** – Enables/disables Battery Energy Storage (BESS)  
+  🟠 **Flexibility Service** – Activates demand-side flexibility  
+3 - Gather conditioned stats (auto for >24h experiment)  
+4 - Have fun! Add new buttons/keys to increase/decrease parameter values  
+5 - Customize your time function and behaviors
 
 ## **Simulation Summary**  
 At the end of the simulation, the following plots are generated:  
