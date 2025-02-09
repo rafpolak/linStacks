@@ -1,0 +1,83 @@
+# **GBSET - Grid Balance Simulation-based Experiment Tool**  
+
+![GBSET Screenshot](https://github.com/user-attachments/assets/ac02e1a5-6820-40da-b0ba-da623f2193cf)  
+
+## **Project Overview**  
+GBSET is a simulation tool for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
+
+## **Features**  
+✅ **Grid balance simulation** – dynamic analysis of energy generation and consumption  
+✅ **Battery Energy Storage System (BESS) management** – charge/discharge algorithm  
+✅ **Flexibility services** – modify energy demand during specific time periods  
+✅ **Real-time visualization** – dynamic graphs displaying power flows and grid balance  
+✅ **Simulation summary** – ECDF and energy cost analysis  
+
+## **Requirements**  
+- Python 3.x  
+- Pygame  
+- NumPy  
+- Matplotlib  
+
+Install dependencies:  
+```sh
+pip install pygame numpy matplotlib
+```
+
+## **How to Run**  
+To start the simulation, simply run the script:  
+```sh
+python GBSET.py
+```
+
+## **Simulation Configuration**  
+The simulation parameters can be adjusted in the `GBSET.py` script to customize the scenario.
+
+### **Battery Energy Storage System (BESS) Parameters**  
+| Parameter           | Description                                       | Default Value |
+|---------------------|---------------------------------------------------|--------------|
+| `battery_capacity`  | Maximum battery storage capacity (kWh)           | `180`        |
+| `battery_charge`    | Initial battery charge level (kWh)               | `0`          |
+| `charge_rate`       | Charging power (kW per time step)                | `30`         |
+| `discharge_rate`    | Discharging power (kW per time step)             | `35`         |
+| `charge_efficiency` | Efficiency of charging (0-1 scale)               | `0.9`        |
+| `discharge_efficiency` | Efficiency of discharging (0-1 scale)         | `0.9`        |
+| `charging_locked`   | Prevents charging when enabled                   | `False`      |
+| `chrgTresh`        | Grid balance threshold for charging (kW)          | `10`         |
+| `dischTresh`       | Grid balance threshold for discharging (kW)       | `-35`        |
+
+### **Grid and Renewable Generation Parameters**  
+| Parameter             | Description                                    | Default Value |
+|-----------------------|------------------------------------------------|--------------|
+| `grid_demand`        | Initial grid demand (kW)                       | `50`         |
+| `base_demand`       | Base grid demand level (kW)                     | `50`         |
+| `renewable_generation` | Initial renewable generation (kW)            | `130`        |
+| `max_generation`    | Maximum possible renewable generation (kW)      | `130`        |
+| `sun_hours`         | Hours of sunlight per day (affects solar gen.)  | `14`         |
+| `time_shift`        | Time offset for demand function                 | `7`          |
+
+### **Flexibility Service Parameters**  
+| Parameter               | Description                                  | Default Value |
+|-------------------------|----------------------------------------------|--------------|
+| `demand_modification`  | Initial demand modification factor (1 = no change) | `1.0`  |
+| `flexChng`            | Demand flexibility change factor              | `0.33`       |
+| `flexTime`            | Duration of flexibility service (time steps)  | `12`         |
+
+### **Simulation Timing and Display**  
+| Parameter      | Description                                         | Default Value |
+|---------------|-----------------------------------------------------|--------------|
+| `time_interv` | Time step in hours                                 | `0.5`        |
+| `FPS`         | Frames per second (higher = smoother animation)     | `8`          |
+| `max_points`  | Maximum number of time steps shown in graphs       | `7 * 48`     |
+
+## **How It Works**  
+🔴 **Toggle BESS** – Enables/disables battery energy storage (BESS)  
+🟠 **Flexibility Service** – Activates demand-side flexibility  
+
+## **Simulation Summary**  
+At the end of the simulation, the following plots are generated:  
+📈 **ECDF of grid balance** – comparing different energy management scenarios  
+📉 **Average grid balance** – evaluating the impact of BESS and flexibility services  
+💰 **Energy cost forecast** – comparing energy costs under different strategies  
+
+## **License**  
+This project is licensed under the MIT License.  
