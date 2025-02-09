@@ -11,18 +11,15 @@ In a simple yet powerful way, you can modify the behavior of flexibility service
 
 At the end of the simulation, the program generates key statistics and presents them through detailed visualizations and charts. The database of data recorded during the experiment is partitioned according to the specific conditions of the test, based on the activation status of various options (fig 2-4).
 
-![GBSET Screenshot ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)
-
+![GBSET Screenshot ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)  
 fig. 2 GBSET Screenshot ECDF plots
 
 
-![GBSET Screenshot Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)
-
+![GBSET Screenshot Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)  
 fig. 3 GBSET Screenshot Time Average
 
 
-![GBSET Screenshot Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)
-
+![GBSET Screenshot Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)  
 fig. 4 GBSET Screenshot Cost Forecast
 
 
@@ -97,7 +94,7 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 ## **Simulation Summary**  
 At the end of the simulation, the following plots are generated:  
 📈 **ECDF of grid balance** – statistical comparing different energy management scenarios  
-📉 **Time Average of grid balance** – evaluating the impact of BESS and flexibility services to base profile 
+📉 **Time Average of grid balance** – evaluating the impact of BESS and flexibility services to base profile  
 💰 **Energy cost forecast** – comparing energy costs under different strategies  
 
 ## **License**  
