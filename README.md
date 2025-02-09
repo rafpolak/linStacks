@@ -10,16 +10,14 @@ In a simple yet powerful way, you can modify the behavior of flexibility service
 
 At the end of the simulation, the program generates key statistics and presents them through detailed visualizations and charts. The database of data recorded during the experiment is partitioned according to the specific conditions of the test, based on the activation status of various options (fig 2-4).
 
-![GBSET ECDF plots](https://github.com/user-attachments/assets/b9181fc8-75df-4a1d-83ab-4b1a021a9737)  
-fig. 2 GBSET ECDF plots
+![GBSET ECDF plots](https://github.com/user-attachments/assets/9b14ad98-5d9e-4b6d-9a87-f516cd33fdf8)  
+fig. 2 GBSET ECDF plots  
 
-
-![GBSET Time Average profile](https://github.com/user-attachments/assets/23ab68a7-b8aa-4f40-86ef-4802763955be)  
-fig. 3 GBSET Time Average
-
-
-![GBSET Cost Forecast](https://github.com/user-attachments/assets/ebf07e4c-32ee-43c8-ac5a-9cc62aa3a65f)  
-fig. 4 GBSET Cost Forecast
+![GBSET Time Average profile](https://github.com/user-attachments/assets/bf0e86c0-4749-4740-bcf4-2d8a2d750b2b)  
+fig. 3 GBSET Time Average  
+ 
+![GBSET Cost Forecast](https://github.com/user-attachments/assets/67bd991f-96e4-4667-88ac-ab60cd6a3386)  
+fig. 4 GBSET Cost Forecast  
 
 
 ## **Features**  
