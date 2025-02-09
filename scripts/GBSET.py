@@ -4,7 +4,7 @@
 """
 Script Name: <GBSET>
 Description: <GBSET - Grid Balance Simulation-based Experiment Tool>
-Author: <rafpolak>
+Author: <rafal polak>
 Date: <2025.02.07>
 GitHub Repository: <https://github.com/rafpolak/linStack>
 """
@@ -33,7 +33,7 @@ font = pygame.font.Font(None, 30)
 
 # Sim. config.
 time_interv = 0.5 # time step
-time_step = 0  # Time step for simulation
+time_clock = 0  # Time step for simulation
 
 # Battery variables
 battery_capacity = 180
@@ -77,7 +77,7 @@ def renewable_generation_function(t):
 
 def demand_function(t):
     profile = math.sin((math.pi / 12) * (t - time_shift)) * random.uniform(0.2, 1.8)  
-    return base_demand * demand_modification + profile * base_demand/2.5
+    return base_demand * demand_modification + profile * base_demand/2.5 if base_demand * demand_modification + profile * base_demand/2.5>0 else 0
 
 def BESS_control():
     if renewable_generation-grid_demand < dischTresh and battery_charge > 0:  # battery should discharge
@@ -89,11 +89,21 @@ def BESS_control():
     else:
         return "waiting"
 
+def update_flexibility_service():
+    new_modification_timer = modification_timer-time_interv
+    if new_modification_timer <= flexTime / 2 and demand_modification == 1 + flexChng:
+        new_demand_modification = 1 - flexChng  
+    elif new_modification_timer <= 0:
+        new_demand_modification = 1.0
+    else: new_demand_modification=demand_modification
+    return new_modification_timer,new_demand_modification
+
 running = True
 button_bess = pygame.Rect(350, 200, 160, 40)  # Toggle BESS
 button_flex = pygame.Rect(535, 200, 220, 40)  # Flexibility Service
 clock = pygame.time.Clock()
 
+# Main Loop
 while running:
     screen.fill(GRAY)
     for event in pygame.event.get():
@@ -107,25 +117,21 @@ while running:
                     demand_modification = 1 + flexChng
                     modification_timer = flexTime
     
-    renewable_generation = renewable_generation_function(time_step % 24)  
-    grid_demand = demand_function(time_step % 24)  
+    renewable_generation = renewable_generation_function(time_clock % 24)  
+    grid_demand = demand_function(time_clock % 24)  
     BM_action = BESS_control()
-    batt_chn = 0
     if BM_action == "charge" and battery_charge < battery_capacity and not charging_locked:
         batt_chn = -charge_rate * charge_efficiency * time_interv
-        battery_charge += -batt_chn
-    elif BM_action == "discharge" and battery_charge > 0:
+        battery_charge -= batt_chn
+    elif BM_action == "discharge" and battery_charge > 0 and not charging_locked:
         batt_chn = discharge_rate * discharge_efficiency * time_interv
         battery_charge -= batt_chn
+    else: batt_chn = 0
     grid_balance = renewable_generation - grid_demand + batt_chn  # Net energy available   
     battery_charge = max(0, min(battery_charge, battery_capacity))
     # Felx serv.
-    if modification_timer > 0:
-        modification_timer -= time_interv
-        if modification_timer <= flexTime/2 and demand_modification == 1+flexChng:
-            demand_modification = 1-flexChng  
-        elif modification_timer <= 0:
-            demand_modification = 1.0 
+    if modification_timer > 0: 
+        modification_timer,demand_modification=update_flexibility_service()
             
     # Draw UI
     text = font.render(f"BESS Energy: {battery_charge:.1f} kWh", True, ORANGE)
@@ -138,7 +144,7 @@ while running:
     screen.blit(text, (50, 200))
     text = font.render(f"BESS Decision: {BM_action.upper()}", True, WHITE)
     screen.blit(text, (350, 50))
-    text = font.render(f"Simulation time: {int(round(time_step/24, 0))} days", True, WHITE)
+    text = font.render(f"Simulation time: {int(time_clock/24)} days", True, WHITE)
     screen.blit(text, (350, 100))
     text = font.render(f"Flexibility service time: {modification_timer:.1f} modifier: {demand_modification:.1f}", True, ORANGE if demand_modification!=1 else WHITE)
     screen.blit(text, (350, 150))
@@ -151,140 +157,112 @@ while running:
     flex_text = font.render("Flexibility Service", True, BLACK)
     screen.blit(bess_text, (button_bess.x + 20, button_bess.y + 10))
     screen.blit(flex_text, (button_flex.x + 20, button_flex.y + 10))
-    
-    #Plots
-    # Update graph data for multiple variables
-    time_data.append(time_step % 24)  # Time in hours (modulo 24)
+    # X~Y Plots
+    # Save and Update graph data for multiple variables
+    time_data.append(time_clock % 24)  # Time in hours (modulo 24)
     generation_data.append(renewable_generation)
     battery_data.append(battery_charge)
     demand_data.append(grid_demand)
     balance_data.append(grid_balance)
     mag.append(charging_locked)
     flex.append(True if demand_modification!=1 else False)
-    # Plot index
+    # Plot idx and scale
     if len(time_data) > max_points:
         start_index = len(time_data) - max_points
     else:
         start_index = 0
-    # TimeSeries Window
-    time_view = time_data[start_index:]
-    generation_view = generation_data[start_index:]
-    battery_view = battery_data[start_index:]
-    demand_view = demand_data[start_index:]
-    balance_view = balance_data[start_index:]
-    # Norm.
+    time_view, generation_view, battery_view, demand_view, balance_view = [data[start_index:] for data in [time_data, generation_data, battery_data, demand_data, balance_data]]
     min_y = min(min(generation_view), min(battery_view), min(demand_view), min(balance_view))
     max_y = max(max(generation_view), max(battery_view), max(demand_view), max(balance_view))
-    pygame.draw.rect(screen, BLACK, (start_x, start_y, graph_width, graph_height))
     # Plot Draw
+    pygame.draw.rect(screen, BLACK, (start_x, start_y, graph_width, graph_height))
     for i in range(1, len(time_view)):
-        x1 = start_x + (i - 1) * (graph_width / max_points)
-        x2 = start_x + i * (graph_width / max_points)
-        #y1
-        y1_gen = start_y + (1 - (generation_view[i - 1] - min_y) / (max_y - min_y)) * graph_height
-        y1_batt = start_y + (1 - (battery_view[i - 1] - min_y) / (max_y - min_y)) * graph_height
-        y1_demand = start_y + (1 - (demand_view[i - 1] - min_y) / (max_y - min_y)) * graph_height
-        y1_balance = start_y + (1 - (balance_view[i - 1] - min_y) / (max_y - min_y)) * graph_height
-        #y2
-        y2_gen = start_y + (1 - (generation_view[i] - min_y) / (max_y - min_y)) * graph_height
-        y2_batt = start_y + (1 - (battery_view[i] - min_y) / (max_y - min_y)) * graph_height
-        y2_demand = start_y + (1 - (demand_view[i] - min_y) / (max_y - min_y)) * graph_height
-        y2_balance = start_y + (1 - (balance_view[i] - min_y) / (max_y - min_y)) * graph_height
-        #draw
+        x1, x2 = start_x + (i - 1) * (graph_width / max_points), start_x + i * (graph_width / max_points)
+        y1_gen, y1_batt, y1_demand, y1_balance = [start_y + (1 - (x - min_y) / (max_y - min_y)) * graph_height for x in [generation_view[i - 1], battery_view[i - 1], demand_view[i - 1], balance_view[i - 1]]]
+        y2_gen, y2_batt, y2_demand, y2_balance = [start_y + (1 - (x - min_y) / (max_y - min_y)) * graph_height for x in [generation_view[i], battery_view[i], demand_view[i], balance_view[i]]]
+        #Draw lines
         pygame.draw.line(screen, ORANGE, (x1, y1_batt), (x2, y2_batt), 2)    # Battery Charge
         pygame.draw.line(screen, BLUE, (x1, y1_gen), (x2, y2_gen), 2)      # Renewable Generation
         pygame.draw.line(screen, YELLOW, (x1, y1_demand), (x2, y2_demand), 2)  # Grid Demand
         pygame.draw.line(screen, RED, (x1, y1_balance), (x2, y2_balance), 3)   # Grid Balance
     state_var_start_y = start_y + graph_height + 10
-    # Refresh Display
+    # Refresh
     pygame.display.flip()
     clock.tick(FPS)  # Control the FPS rate
-    time_step += time_interv
-       
+    time_clock += time_interv
 pygame.quit()
 
-
-#Summary plots
-#Fig. 1
-mag = np.array(mag, dtype=bool)
-flex = np.array(flex, dtype=bool)
-window_size = 48
-kernel = np.ones(window_size, dtype=bool)
-convolved = np.convolve(flex.astype(int), kernel, mode='same')
-runmax_flex = convolved > 0 
-balance_data = np.array(balance_data)
-time_data = np.array(time_data)
-idx_ff = (~mag) & (~runmax_flex)  # False, False
-idx_ft = (~mag) & runmax_flex     # False, True
-idx_tf = mag & (~runmax_flex)     # True, False
-idx_tt = mag & runmax_flex      # True, True
-balance_ff = balance_data[idx_ff]
-balance_ft = balance_data[idx_ft]
-balance_tf = balance_data[idx_tf]
-balance_tt = balance_data[idx_tt]
-time_ff = time_data[idx_ff]
-time_ft = time_data[idx_ft]
-time_tf = time_data[idx_tf]
-time_tt = time_data[idx_tt]
-sorted_balance1 = np.sort(balance_tf)
-sorted_balance2 = np.sort(balance_tt)
-sorted_balance3 = np.sort(balance_ff)
-sorted_balance4 = np.sort(balance_ft)
-# Calculate the ECDF values
-ecdf_y1 = np.arange(1, len(sorted_balance1) + 1) / len(sorted_balance1)
-ecdf_y2 = np.arange(1, len(sorted_balance2) + 1) / len(sorted_balance2)
-ecdf_y3 = np.arange(1, len(sorted_balance3) + 1) / len(sorted_balance3)
-ecdf_y4 = np.arange(1, len(sorted_balance4) + 1) / len(sorted_balance4)
-# Create the ECDF plot 
-plt.figure(figsize=(8, 6))
-plt.step(sorted_balance1, ecdf_y1, where='post', color='red', label='ECDF of Grid Balance without BESS&FLEX')
-plt.step(sorted_balance2, ecdf_y2, where='post', color='orange', label='ECDF of Grid Balance with FLEX')
-plt.step(sorted_balance3, ecdf_y3, where='post', color='green', label='ECDF of Grid Balance with BESS')
-plt.step(sorted_balance4, ecdf_y4, where='post', color='blue', label='ECDF of Grid Balance with BESS&FLEX')
-plt.xlabel('Grid Balance (kW)')
-plt.ylabel('Cumulative Probability')
-plt.title('Simulation Summary - ECDF of Grid Balance')
-plt.grid(True)
-plt.legend()
-plt.show()
-
-#Fig. 2
-def average_y_per_x(x_values, y_values):
-    sum_y = defaultdict(float)
-    count_y = defaultdict(int)
-    for x, y in zip(x_values, y_values):
-        sum_y[x] += y
-        count_y[x] += 1
-    avg_x = np.array(sorted(sum_y.keys()))
-    avg_y = np.array([sum_y[x] / count_y[x] for x in avg_x])
-    return avg_x, avg_y
-avg_x1, avg_y1 = average_y_per_x(time_tf, balance_tf)
-avg_x2, avg_y2 = average_y_per_x(time_tt, balance_tt)
-avg_x3, avg_y3 = average_y_per_x(time_ff, balance_ff)
-avg_x4, avg_y4 = average_y_per_x(time_ft, balance_ft)
-plt.figure(figsize=(8, 6))
-plt.plot(avg_x1, avg_y1, label="Grid Balance without BESS&FLEX", color='red', linewidth=2)
-plt.plot(avg_x2, avg_y2, label="Grid Balance with FLEX", color='orange', linewidth=2)
-plt.plot(avg_x3, avg_y3, label="Grid Balance with BESS", color='green', linewidth=2)
-plt.plot(avg_x4, avg_y4, label="Grid Balance with BESS&FLEX", color='blue', linewidth=2)
-plt.xlabel('Time (Hours)')
-plt.ylabel('Grid Balance (kW)')
-plt.title('Averaged Grid Balance Data')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-#Fig. 3
-min_val = np.min(avg_y1)
-max_val = np.max(avg_y1)
-scaled_avg_y1 = 500 - ((avg_y1 - min_val) * 500) / (max_val - min_val)
-sum_product_y1 = np.sum(-avg_y1 * scaled_avg_y1)/1000*time_interv
-sum_product_y2 = np.sum(-avg_y2 * scaled_avg_y1)/1000*time_interv
-sum_product_y3 = np.sum(-avg_y3 * scaled_avg_y1)/1000*time_interv
-sum_product_y4 = np.sum(-avg_y4 * scaled_avg_y1)/1000*time_interv
-sum_products = np.array([sum_product_y1, sum_product_y2, sum_product_y3, sum_product_y4])
-plt.bar(range(1, 5), sum_products)
-plt.xticks([1, 2, 3, 4], ['no BESS&FLEX', 'FLEX only', 'BESS only', 'BESS&FLEX'])
-plt.ylabel('Daily Energy Costs')
-plt.title('Energy Cost Forecast')
-plt.show()
+# Exp. data summary
+if time_clock>24:
+    mag = np.array(mag, dtype=bool)
+    flex = np.array(flex, dtype=bool)
+    window_size = int(24/time_interv)
+    kernel = np.ones(window_size, dtype=bool)
+    convolved = np.convolve(flex.astype(int), kernel, mode='same')
+    runmax_flex = convolved > 0 
+    balance_data = np.array(balance_data)
+    time_data = np.array(time_data)
+    idx_ff, idx_ft, idx_tf, idx_tt = (~mag) & (~runmax_flex), (~mag) & runmax_flex, mag & (~runmax_flex), mag & runmax_flex
+    balance_ff, balance_ft, balance_tf, balance_tt = balance_data[idx_ff], balance_data[idx_ft], balance_data[idx_tf], balance_data[idx_tt]
+    time_ff, time_ft, time_tf, time_tt = time_data[idx_ff], time_data[idx_ft], time_data[idx_tf], time_data[idx_tt]
+    
+    # Figure 1
+    sorted_balance1, sorted_balance2, sorted_balance3, sorted_balance4 = np.sort(balance_tf), np.sort(balance_tt), np.sort(balance_ff), np.sort(balance_ft)
+    # Calculate the ECDF values
+    ecdf_y1, ecdf_y2, ecdf_y3, ecdf_y4 = [np.arange(1, len(sorted_balance) + 1) / len(sorted_balance) for sorted_balance in [sorted_balance1, sorted_balance2, sorted_balance3, sorted_balance4]]
+    # Create the ECDF plot 
+    plt.figure(figsize=(8, 6))
+    plt.step(sorted_balance1, ecdf_y1, where='post', color='red', label='ECDF of Grid Balance without BESS&FLEX')
+    plt.step(sorted_balance2, ecdf_y2, where='post', color='orange', label='ECDF of Grid Balance with FLEX')
+    plt.step(sorted_balance3, ecdf_y3, where='post', color='green', label='ECDF of Grid Balance with BESS')
+    plt.step(sorted_balance4, ecdf_y4, where='post', color='blue', label='ECDF of Grid Balance with BESS&FLEX')
+    plt.xlabel('Grid Balance (kW)')
+    plt.ylabel('Cumulative Probability')
+    plt.title('Simulation Summary - ECDF of Grid Balance')
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+    
+    # Figure 2
+    def average_y_per_x(x_values, y_values):
+        sum_y = defaultdict(float)
+        count_y = defaultdict(int)
+        for x, y in zip(x_values, y_values):
+            sum_y[x] += y
+            count_y[x] += 1
+        avg_x = np.array(sorted(sum_y.keys()))
+        avg_y = np.array([sum_y[x] / count_y[x] for x in avg_x])
+        return avg_x, avg_y
+    avg_x1, avg_y1 = average_y_per_x(time_tf, balance_tf)
+    avg_x2, avg_y2 = average_y_per_x(time_tt, balance_tt)
+    avg_x3, avg_y3 = average_y_per_x(time_ff, balance_ff)
+    avg_x4, avg_y4 = average_y_per_x(time_ft, balance_ft)
+    plt.figure(figsize=(8, 6))
+    plt.plot(avg_x1, avg_y1, label="Grid Balance without BESS&FLEX", color='red', linewidth=2)
+    plt.plot(avg_x2, avg_y2, label="Grid Balance with FLEX", color='orange', linewidth=2)
+    plt.plot(avg_x3, avg_y3, label="Grid Balance with BESS", color='green', linewidth=2)
+    plt.plot(avg_x4, avg_y4, label="Grid Balance with BESS&FLEX", color='blue', linewidth=2)
+    plt.xlabel('Time (Hours)')
+    plt.ylabel('Grid Balance (kW)')
+    plt.title('Averaged Grid Balance Data')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
+    # Figure 3
+    if avg_y1.size>=24/time_interv:
+        high_ep,low_ep=500,500
+        min_val = np.min(avg_y1)
+        max_val = np.max(avg_y1)
+        price_profile = high_ep - ((avg_y1 - min_val) * low_ep) / (max_val - min_val)
+        sum_cost_y1 = np.sum(-avg_y1 * price_profile)/1000*time_interv if avg_y1.size>=24/time_interv else 0
+        sum_cost_y2 = np.sum(-avg_y2 * price_profile)/1000*time_interv if avg_y2.size>=24/time_interv else 0
+        sum_cost_y3 = np.sum(-avg_y3 * price_profile)/1000*time_interv if avg_y3.size>=24/time_interv else 0
+        sum_cost_y4 = np.sum(-avg_y4 * price_profile)/1000*time_interv if avg_y4.size>=24/time_interv else 0
+        sum_costs = np.array([sum_cost_y1, sum_cost_y2, sum_cost_y3, sum_cost_y4])
+        plt.bar(range(1, 5), sum_costs)
+        plt.xticks([1, 2, 3, 4], ['no BESS&FLEX', 'FLEX only', 'BESS only', 'BESS&FLEX'])
+        plt.ylabel('Daily Energy Costs')
+        plt.title('Energy Cost Forecast')
+        plt.show()
+    print("Need >1 day without BESS&FLEX to create cost profile based on grid balance")
