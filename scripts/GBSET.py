@@ -22,29 +22,31 @@ time_clock = 0  # Time clock start
 
 # Battery variables
 battery_capacity = 180
-battery_charge = 0  # Initial charge level
 charge_rate = 30  # kWh per charge action
 discharge_rate = 35  # kWh per discharge action
 charge_efficiency = 0.9  # 90% efficiency in charging
 discharge_efficiency = 0.9  # 90% efficiency in discharging
-charging_locked = False  # charge lock
 dischTresh=-35 # Balande level for discharging
 chrgTresh=10 # Balance level for charging
+battery_charge = 0  # Initial charge level
+charging_locked = False  # Initial charge lock
 
 # Flexability service
-demand_modification = 1.0  # Initial mod.
-modification_timer = 0  
 flexChng=0.33 # Flex. mod.
-flexTime=12 # total time (phase 1 +2)
+flexTime=12 # total time (phase 1+2)
+demand_modification = 1.0  # Initial mod.
+modification_timer = 0  # Initial timer.
 
 # Grid variables
-grid_demand = 50  # Initial grid demand (kW)
 base_demand = 50  # Base grid demand (kW)
-renewable_generation = 130  # Initial renewable generation (kW)
 max_generation = 130  # Max renewable generation (kW)
 sun_hours = 14 # Sun hours per day
-grid_balance = renewable_generation - grid_demand  # Initial Net energy available
 time_shift=7 # Offset for demand function
+
+# Time or state-based functions config.
+grid_demand = base_demand  # Initial grid demand (kW)
+renewable_generation = max_generation  # Initial renewable generation (kW)
+grid_balance = renewable_generation - grid_demand  # Initial Net energy available
 
 def renewable_generation_function(t):
     sun_position = math.sin((math.pi / sun_hours) * t)  # Sinusoidal variation (0 to 1)
@@ -85,7 +87,7 @@ graph_height = 250 # Plot size
 start_x = 50 # Plot coord.
 start_y = HEIGHT - graph_height - 50
 FPS = 8  # FPS, more for smoother animation
-max_points = 7*24/time_interv # Max plot X-axis limit
+max_points = int(7*24/time_interv) # Max plot X-axis limit
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Grid Balance Simulation-based Experiment Tool")
