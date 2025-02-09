@@ -5,7 +5,7 @@
 fig. 1 GBSET Screenshot Main window
 
 ## **Project Overview**  
-GBSET is a simulation tool (fig. 1) for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
+GBSET is a very simple, easy-to-use simulation tool (fig. 1) for analyzing energy balance in a power grid, incorporating energy storage (BESS) and flexibility services. The application visualizes renewable generation, demand, and battery state, allowing users to test different energy management scenarios.
 
 In a simple yet powerful way, you can modify the behavior of flexibility services or other components. The tool can be expanded with dedicated time-based features, such as load profiles, advanced behavioral logic, or AI-driven decision-making. Potential enhancements include GAN-based learning, reinforcement learning agents, and other adaptive control strategies for more advanced energy management.
 
@@ -31,7 +31,7 @@ fig. 4 GBSET Screenshot Cost Forecast
 ✅ **Battery Energy Storage System (BESS) management** – charge/discharge algorithm  
 ✅ **Flexibility services** – modify energy demand during specific time periods  
 ✅ **Real-time visualization** – dynamic graphs displaying power flows and grid balance  
-✅ **Simulation summary** – ECDF and energy cost analysis  
+✅ **Simulation summary** – Grid balance ECDF, profile and energy cost analysis  
 
 ## **Requirements**  
 - Python 3.x  
@@ -96,8 +96,8 @@ The simulation parameters can be adjusted in the `GBSET.py` script to customize 
 
 ## **Simulation Summary**  
 At the end of the simulation, the following plots are generated:  
-📈 **ECDF of grid balance** – comparing different energy management scenarios  
-📉 **Average grid balance** – evaluating the impact of BESS and flexibility services  
+📈 **ECDF of grid balance** – statistical comparing different energy management scenarios  
+📉 **Time Average of grid balance** – evaluating the impact of BESS and flexibility services to base profile 
 💰 **Energy cost forecast** – comparing energy costs under different strategies  
 
 ## **License**  
