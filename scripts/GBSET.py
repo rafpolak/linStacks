@@ -123,7 +123,10 @@ while running:
     else: batt_chn = 0
     grid_balance = renewable_generation - grid_demand + batt_chn  # Net energy available   
     battery_charge = max(0, min(battery_charge, battery_capacity))
-    # Felx serv.
+    # Flexibility service
+    #if time_clock % 24==6 and time_clock%(24*14) < (24*7): # Optional autorun 7days on/off
+    #    demand_modification = 1 + flexChng
+    #    modification_timer = flexTime
     if modification_timer > 0: 
         modification_timer,demand_modification=update_flexibility_service()
             
