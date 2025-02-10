@@ -60,7 +60,7 @@ def demand_function(t):
 def BESS_control():
     if renewable_generation-grid_demand < dischTresh and battery_charge > 0:  # battery should discharge
         return "discharge"
-    elif renewable_generation-grid_demand > chrgTresh and battery_charge < battery_capacity and not charging_locked:  # Excess energy, battery should charge
+    elif renewable_generation-grid_demand > chrgTresh and battery_charge < battery_capacity:  # Excess energy, battery should charge
         return "charge"
     elif battery_charge > 0:
         return "hold"  # Do nothing
